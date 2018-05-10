@@ -35,6 +35,11 @@ public protocol DKImagePickerControllerUIDelegate {
      Called after the user changes the selection.
      */
     func imagePickerController(_ imagePickerController: DKImagePickerController, didSelectAssets: [DKAsset])
+  
+    /**
+    Called before the user changes the selection.
+    */
+    func imagePickerController(_ imagePickerController: DKImagePickerController, shouldSelectAsset: DKAsset) -> Bool
     
     /**
      Called after the user changes the selection.
@@ -144,12 +149,16 @@ open class DKImagePickerControllerBaseUIDelegate: NSObject, DKImagePickerControl
 		vc.navigationItem.leftBarButtonItem = nil
 	}
     
-    open func imagePickerController(_ imagePickerController: DKImagePickerController, didSelectAssets: [DKAsset]) {
+  open func imagePickerController(_ imagePickerController: DKImagePickerController, didSelectAssets: [DKAsset]) {
         self.updateDoneButtonTitle(self.createDoneButtonIfNeeded())
     }
 	    
     open func imagePickerController(_ imagePickerController: DKImagePickerController, didDeselectAssets: [DKAsset]) {
         self.updateDoneButtonTitle(self.createDoneButtonIfNeeded())
+    }
+  
+    open func imagePickerController(_ imagePickerController: DKImagePickerController, shouldSelectAsset: DKAsset) -> Bool {
+      return true
     }
     
     open var isMaxLimitAlertDisplayed: Bool {
