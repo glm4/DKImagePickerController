@@ -468,7 +468,8 @@ open class DKAssetGroupDetailVC: UIViewController,
     
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         if let asset = (collectionView.cellForItem(at: indexPath) as? DKAssetGroupDetailBaseCell)?.asset {
-            return self.imagePickerController.canSelect(asset: asset)
+            let shouldProceed = imagePickerController.UIDelegate.imagePickerController(imagePickerController, shouldSelectAsset: asset)
+            return shouldProceed && self.imagePickerController.canSelect(asset: asset)
         } else {
             return true
         }
