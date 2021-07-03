@@ -30,6 +30,11 @@ public enum DKImagePickerControllerExportStatus: Int {
     case none, exporting
 }
 
+@objc
+public enum DKImagePickerControllerAssetOrientation: Int {
+    case landscape, portrait, all
+}
+
 ////////////////////////////////////////////////////////////////////////
 
 @objc
@@ -82,6 +87,9 @@ open class DKImagePickerController: UINavigationController, DKImageBaseManagerOb
     
     /// A Bool value indicating whether to allow the picker auto-rotate the screen.
     @objc public var allowsLandscape = false
+  
+    ///An Int indicating the orientation filter to apply when fetching the assets
+    @objc public var orientationsAllowed: DKImagePickerControllerAssetOrientation = .all
     
     /// Set the showsEmptyAlbums to specify whether or not the empty albums is shown in the picker.
     @objc public var showsEmptyAlbums = true
@@ -133,6 +141,7 @@ open class DKImagePickerController: UINavigationController, DKImageBaseManagerOb
     /// The object that acts as the data source of the picker.
     @objc public private(set) lazy var groupDataManager: DKImageGroupDataManager = {
         let configuration = DKImageGroupDataManagerConfiguration()
+        configuration.orientationsAllowed = self.orientationsAllowed
         configuration.assetFetchOptions = self.createDefaultAssetFetchOptions()
         configuration.fetchLimit = self.fetchLimit
         
@@ -331,8 +340,9 @@ open class DKImagePickerController: UINavigationController, DKImageBaseManagerOb
             self.UIDelegate.imagePickerController(self, hidesCancelButtonForVC: vc)
         }
     }
-    
+  
     private func createDefaultAssetFetchOptions() -> PHFetchOptions {
+        
         let createImagePredicate = { () -> NSPredicate in
             let imagePredicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
             
